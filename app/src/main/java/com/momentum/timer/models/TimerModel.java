@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 public class TimerModel implements Serializable {
     private int id,audioSetting;
+    private String selectedAudio;
     private String timerTitle,dominoTitle,restTitle;
     private long segmentHours,segmentMinutes,segmentSeconds;
     private long currentHour,currentMinute,currentSecond;
@@ -64,13 +65,23 @@ public class TimerModel implements Serializable {
         this.currentRepeat = currentRepeat;
     }
 
+    public String getSelectedAudio() {
+        return selectedAudio;
+    }
+
+    public void setSelectedAudio(String selectedAudio) {
+        this.selectedAudio = selectedAudio;
+    }
+
     public void setPaused(boolean paused) {
         this.paused = paused;
     }
-    public void increaseRepeat(){
+
+    public void increaseRepeat() {
         currentRepeat++;
     }
-    public void increaseDomino(){
+
+    public void increaseDomino() {
         currentDominoSegment++;
     }
     public void  increaseRest() {
@@ -96,27 +107,29 @@ public class TimerModel implements Serializable {
             }
             Long remainingTime=allSegments.get(currentRestSegment)-(currentHour*Constants.HOUR_CONSTANT);
             if (remainingTime>59) {
-                currentMinute=Math.round((float)remainingTime/Constants.MINUTE_CONSTANT);
+                currentMinute = Math.round((float) remainingTime / Constants.MINUTE_CONSTANT);
             }
-            remainingTime=remainingTime-(currentMinute*Constants.MINUTE_CONSTANT);
-            currentSecond=currentMinute;
+            remainingTime = remainingTime - (currentMinute * Constants.MINUTE_CONSTANT);
+            currentSecond = currentMinute;
         }
     }
 
     public ArrayList<Long> getAllSegments() {
         return allSegments;
     }
-    public int getWholeDuration() {
-        int time=0;
-        for(Long i:allSegments) {
-            time+=i;
+
+    public long getWholeDuration() {
+        long time = 0;
+        for (Long i : allSegments) {
+            time = time + i;
         }
-        for (Long i:restSegments) {
-            time+=i;
+        for (Long i : restSegments) {
+            time = time + i;
         }
-        Log.d("wholeDuration",time+"");
+        Log.d("wholeDuration", time + "");
         return time;
     }
+
     public ArrayList<Long> getRestSegments() {
         return restSegments;
     }
@@ -181,7 +194,7 @@ public class TimerModel implements Serializable {
         this.currentSecond = currentSecond;
     }
 
-    public TimerModel(int id, String timerTitle, String dominoTitle, String restTitle, long segmentHours, long segmentMinutes, long segmentSeconds, int spacingPercentage, int numberOfSegment, int numberOfRepeat, int audioSetting) {
+    public TimerModel(int id, String timerTitle, String dominoTitle, String restTitle, long segmentHours, long segmentMinutes, long segmentSeconds, int spacingPercentage, int numberOfSegment, int numberOfRepeat, int audioSetting, String selectedAudio) {
         this.id = id;
         this.timerTitle = timerTitle;
         this.dominoTitle = dominoTitle;
@@ -192,7 +205,8 @@ public class TimerModel implements Serializable {
         this.spacingPercentage = spacingPercentage;
         this.numberOfSegment = numberOfSegment;
         this.numberOfRepeat = numberOfRepeat;
-        this.audioSetting=audioSetting;
+        this.audioSetting = audioSetting;
+        this.selectedAudio = selectedAudio;
 
     }
 
@@ -249,6 +263,6 @@ public class TimerModel implements Serializable {
     }
     @NonNull
     public String toString() {
-        return "id: "+id+" timerTitle:"+timerTitle+" dominoTitle:"+dominoTitle+" restTitle:"+restTitle+" segmentHours:"+segmentHours+" segmentMinutes:"+segmentMinutes+" segmentSeconds:"+segmentSeconds+" spacingPercentage:"+spacingPercentage+" numberOfSegment:"+numberOfSegment+" numberOfRepeat:"+numberOfRepeat;
+        return "id: " + id + " timerTitle:" + timerTitle + " dominoTitle:" + dominoTitle + " restTitle:" + restTitle + " segmentHours:" + segmentHours + " segmentMinutes:" + segmentMinutes + " segmentSeconds:" + segmentSeconds + " spacingPercentage:" + spacingPercentage + " numberOfSegment:" + numberOfSegment + " numberOfRepeat:" + numberOfRepeat + " audioSetting: " + audioSetting;
     }
 }

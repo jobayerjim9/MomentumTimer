@@ -2,7 +2,8 @@
     <string name="app_name">Momentum Timer</string>
     <string name="no_timer_added_yet">No Timer Added Yet!</string>
     <string name="add_timer">Add Timer</string>
-    <string name="total_time">Total Time:- %dH : %dM : %dS </string>
+    <string name="total_time">Segment Time:- %dH : %dM : %dS </string>
+    <string name="all_total_time">All Segment Time:- %dH : %dM : %dS </string>
     <string name="domino_title">Domino Title: %s</string>
     <string name="rest_title">Rest Title: %s</string>
     <string name="segment">Segment : %d</string>

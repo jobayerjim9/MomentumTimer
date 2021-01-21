@@ -122,8 +122,23 @@ public class AddTimerActivity extends AppCompatActivity {
         binding.createTimer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               validateData();
+                validateData();
 
+            }
+        });
+        binding.incPercentage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (binding.spacingPercentageSeekBar.getProgress() < 100) {
+                    binding.spacingPercentageSeekBar.setProgress(binding.spacingPercentageSeekBar.getProgress() + 1);
+                }
+            }
+        });
+        binding.dePercentage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (binding.spacingPercentageSeekBar.getProgress() > 0)
+                    binding.spacingPercentageSeekBar.setProgress(binding.spacingPercentageSeekBar.getProgress() - 1);
             }
         });
     }
@@ -146,13 +161,11 @@ public class AddTimerActivity extends AppCompatActivity {
             binding.timerTitleInput.setErrorEnabled(false);
             binding.dominoSegmentTitleInput.setErrorEnabled(true);
             binding.dominoSegmentTitleInput.setError("Enter a domino title to proceed");
-        }
-        else if (hoursText.isEmpty() || minutesText.isEmpty() || secondsText.isEmpty()) {
+        } else if (hoursText.isEmpty() && minutesText.isEmpty() && secondsText.isEmpty()) {
             binding.timerTitleInput.setErrorEnabled(false);
             binding.dominoSegmentTitleInput.setErrorEnabled(false);
             Toast.makeText(this, "Enter duration of domino segment", Toast.LENGTH_SHORT).show();
-        }
-        else if (restTitle.isEmpty()) {
+        } else if (restTitle.isEmpty()) {
             binding.timerTitleInput.setErrorEnabled(false);
             binding.dominoSegmentTitleInput.setErrorEnabled(false);
             binding.restSegmentTitleInput.setErrorEnabled(true);
@@ -182,7 +195,16 @@ public class AddTimerActivity extends AppCompatActivity {
             binding.restSegmentTitleInput.setErrorEnabled(false);
             binding.numberOfDominoInput.setErrorEnabled(false);
             binding.numberOfRepeatInput.setErrorEnabled(false);
-            TimerModel timerModel=new TimerModel(timerTitle,dominoTitle,restTitle,Integer.parseInt(hoursText),Integer.parseInt(minutesText),Integer.parseInt(secondsText),spacingPercentage,Integer.parseInt(numberOfSegment),Integer.parseInt(numberOfRepeats));
+            if (hoursText.isEmpty()) {
+                hoursText = "0";
+            }
+            if (minutesText.isEmpty()) {
+                minutesText = "0";
+            }
+            if (secondsText.isEmpty()) {
+                secondsText = "0";
+            }
+            TimerModel timerModel = new TimerModel(timerTitle, dominoTitle, restTitle, Integer.parseInt(hoursText), Integer.parseInt(minutesText), Integer.parseInt(secondsText), spacingPercentage, Integer.parseInt(numberOfSegment), Integer.parseInt(numberOfRepeats));
             saveRuleToDatabase(timerModel);
 
         }

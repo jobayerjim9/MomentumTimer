@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.momentum.timer.R;
 import com.momentum.timer.databinding.ItemTimerBinding;
+import com.momentum.timer.models.Constants;
 import com.momentum.timer.models.TimerModel;
 import com.momentum.timer.ui.activity.TimerActivity;
 
@@ -41,11 +42,20 @@ public class TimerRecyclerAdapter extends RecyclerView.Adapter<TimerRecyclerAdap
         holder.binding.item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(context, TimerActivity.class);
-                intent.putExtra("timerModel",timerModels.get(position));
+                Intent intent = new Intent(context, TimerActivity.class);
+                intent.putExtra("timerModel", timerModels.get(position));
                 context.startActivity(intent);
             }
         });
+        timerModels.get(position).calculateAllSegments();
+        long wholeSeconds = timerModels.get(position).getWholeDuration();
+        long hourAll = (wholeSeconds / Constants.HOUR_CONSTANT);
+        wholeSeconds = wholeSeconds - (hourAll * Constants.HOUR_CONSTANT);
+        long minuteAll = (wholeSeconds / Constants.MINUTE_CONSTANT);
+        wholeSeconds = wholeSeconds - (minuteAll * Constants.MINUTE_CONSTANT);
+        String placeholder = "Total Time:- " + hourAll + "H : " + minuteAll + "M : " + wholeSeconds + "S";
+
+        holder.binding.totalTime2.setText(placeholder);
         holder.binding.executePendingBindings();
     }
 

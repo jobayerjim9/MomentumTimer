@@ -47,7 +47,8 @@ public class DatabaseAccess {
         }
 
     }
-    public Boolean updateAudioSettings(int id,int settings ) {
+
+    public Boolean updateAudioSettings(int id, int settings) {
         try {
             String sql = "UPDATE time_rule SET audioSettings=" + settings + " WHERE id=" + id;
             sqLiteDatabase.execSQL(sql);
@@ -57,15 +58,28 @@ public class DatabaseAccess {
             return false;
         }
     }
-    public ArrayList<TimerModel> getAllTimerRule(){
+
+    public Boolean updateTone(int id, String ringtone) {
+        try {
+            String sql = "UPDATE time_rule SET selectedAudio='" + ringtone + "' WHERE id=" + id;
+            Log.d("sql", sql);
+            sqLiteDatabase.execSQL(sql);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public ArrayList<TimerModel> getAllTimerRule() {
         ArrayList<TimerModel> timerModels = new ArrayList<>();
         try {
             cursor = sqLiteDatabase.rawQuery("SELECT * FROM time_rule", new String[]{});
-             while (cursor.moveToNext()) {
+            while (cursor.moveToNext()) {
                  Log.d("tableSize",cursor.getCount()+" "+cursor.getColumnCount()+" "+cursor.getInt(10));
-                 TimerModel timerModel = new TimerModel(cursor.getInt(0), cursor.getString(1)
+                TimerModel timerModel = new TimerModel(cursor.getInt(0), cursor.getString(1)
                         , cursor.getString(2), cursor.getString(3), cursor.getInt(4), cursor.getInt(5)
-                        , cursor.getInt(6), cursor.getInt(7), cursor.getInt(8), cursor.getInt(9),cursor.getInt(10));
+                        , cursor.getInt(6), cursor.getInt(7), cursor.getInt(8), cursor.getInt(9), cursor.getInt(10), cursor.getString(11));
                 timerModels.add(timerModel);
             }
             return timerModels;

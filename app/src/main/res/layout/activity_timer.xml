@@ -13,6 +13,19 @@
     android:layout_height="match_parent"
     tools:context=".ui.activity.TimerActivity">
 
+    <TextView
+        android:id="@+id/totalTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:fontFamily="@font/roboto_condensed_regular"
+        android:text="Repeat No. 1"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/resetTimerButton"
         android:layout_width="wrap_content"
@@ -158,14 +171,34 @@
             android:textColor="@color/black"
             android:textSize="16sp" />
 
-        <SeekBar
-            android:id="@+id/wholeTimerSeekbar"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:progressBackgroundTint="@color/blue_400"
-            android:progressTint="@color/blue_400"
-            android:thumbTint="@color/blue_400" />
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/minusTimer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_baseline_remove_24" />
+
+            <SeekBar
+                android:id="@+id/wholeTimerSeekbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:progressBackgroundTint="@color/blue_400"
+                android:progressTint="@color/blue_400"
+                android:thumbTint="@color/blue_400" />
+
+            <ImageView
+                android:id="@+id/plusTimer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_baseline_add_24" />
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -180,7 +213,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
+        app:layout_constraintTop_toBottomOf="@+id/totalTime" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 
 

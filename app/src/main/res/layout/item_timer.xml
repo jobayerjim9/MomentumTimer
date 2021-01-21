@@ -97,6 +97,16 @@
                         android:textColor="@color/black"
                         tools:text="1H:2M:3S" />
 
+                    <TextView
+                        android:id="@+id/totalTime2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:fontFamily="@font/roboto_regular"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        tools:text="1H:2M:3S" />
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
