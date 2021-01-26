@@ -329,14 +329,7 @@ public class TimerActivity extends AppCompatActivity {
         binding.currentHourText.setText(binding.getData().getCurrentHour() + "H");
         binding.currentMinuteText.setText(binding.getData().getCurrentMinute() + "M");
         binding.currentSecondText.setText(binding.getData().getCurrentSecond() + "S");
-        int sec = (int) millisUntilFinished / 1000;
-        Log.d("segmentSec", sec + "");
-        if (sec == 3 && (timerModel.getAudioSetting() == 2 || timerModel.getAudioSetting() == 3)) {
-            playWarning();
-        }
-        if (sec == 0) {
-            stopWarning();
-        }
+
         binding.getData().setTimeRunning(true);
         Log.d("changingSeek", changingSeek + "");
         if (!changingSeek) {
@@ -357,13 +350,6 @@ public class TimerActivity extends AppCompatActivity {
         binding.getData().setTimeRunning(true);
         int sec = (int) millisUntilFinished / 1000;
         Log.d("restSec", sec + "");
-        if (sec == 3 && (timerModel.getAudioSetting() == 2 || timerModel.getAudioSetting() == 3)) {
-            playWarning();
-
-        }
-        if (sec == 0) {
-            stopWarning();
-        }
         Log.d("changingSeek", changingSeek + "");
         if (!changingSeek) {
             binding.segmentTimerSlider.setProgress((int) (binding.getData().getRestSegments().get(binding.getData().getCurrentRestSegment()) - (millisUntilFinished / 1000)));
@@ -378,19 +364,20 @@ public class TimerActivity extends AppCompatActivity {
 
     Intent soundIntent = null;
 
-    private void playWarning() {
+    private void playWarning(long remain) {
+        stopWarning();
         soundIntent = new Intent(TimerActivity.this, SoundService.class);
         soundIntent.putExtra("uri", timerModel.getSelectedAudio());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
-            startForegroundService(soundIntent);
-        } else {
-            startService(soundIntent);
-        }
+        soundIntent.putExtra("timer", remain);
+        startService(soundIntent);
     }
 
     private void stopWarning() {
         if (soundIntent != null) {
+            stopService(soundIntent);
+        }
+        else {
+            soundIntent = new Intent(TimerActivity.this, SoundService.class);
             stopService(soundIntent);
         }
     }
@@ -403,9 +390,11 @@ public class TimerActivity extends AppCompatActivity {
         binding.currentMinuteText.setText(binding.getData().getCurrentMinute() + "M");
         binding.currentSecondText.setText(binding.getData().getCurrentSecond() + "S");
         binding.getData().setTimeRunning(false);
+        stopWarning();
     }
 
     private void resumeTimer(long remain) {
+        playWarning(remain);
         binding.getData().setTimeRunning(true);
         if (binding.getData().isDomino()) {
             if (timerModel.getAudioSetting() == 1 || timerModel.getAudioSetting() == 3) {
@@ -472,6 +461,7 @@ public class TimerActivity extends AppCompatActivity {
         binding.segmentTimerSlider.setMax(segmentMax);
         binding.timePlayPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_baseline_pause_24));
         binding.segmentName.setText(binding.getData().getDominoTitle());
+        playWarning(binding.getData().getAllSegments().get(binding.getData().getCurrentDominoSegment()));
         segmentTimer = new CountDownTimer(binding.getData().getAllSegments().get(binding.getData().getCurrentDominoSegment()) * 1000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -522,6 +512,7 @@ public class TimerActivity extends AppCompatActivity {
     }
 
     private void startRestTime() {
+
         if (timerModel.getAudioSetting() == 1 || timerModel.getAudioSetting() == 3) {
             textToSpeech.speak(timerModel.getRestTitle(), TextToSpeech.QUEUE_FLUSH, null);
         }
@@ -533,6 +524,8 @@ public class TimerActivity extends AppCompatActivity {
         int segmentMax = (int) Math.floor(binding.getData().getRestSegments().get(binding.getData().getCurrentRestSegment()));
         binding.segmentTimerSlider.setMax(segmentMax);
         Log.d("restSegment", binding.getData().getRestSegments().get(binding.getData().getCurrentRestSegment()) + "");
+
+        playWarning(binding.getData().getRestSegments().get(binding.getData().getCurrentRestSegment()));
         restTimer = new CountDownTimer(binding.getData().getRestSegments().get(binding.getData().getCurrentRestSegment()) * 1000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {

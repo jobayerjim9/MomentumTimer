@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -152,12 +153,23 @@ public class TimerSettingsActivity extends AppCompatActivity {
             Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
 
             Ringtone ringtone = RingtoneManager.getRingtone(TimerSettingsActivity.this, uri);
-            Log.d("ringtonePicked", requestCode + " picked " + ringtone.getTitle(TimerSettingsActivity.this));
-            databaseAccess.open();
-            databaseAccess.updateTone(timerModel.getId(), uri.toString());
-            databaseAccess.close();
-            binding.chengeToneText.setText("Change Alarm Tone (" + ringtone.getTitle(TimerSettingsActivity.this) + ")");
-            Toast.makeText(this, "Sound Updated Successfully", Toast.LENGTH_SHORT).show();
+            try {
+                MediaPlayer player = MediaPlayer.create(this, uri);
+                player.setLooping(false);
+                player.start();
+                Log.d("ringtonePicked", requestCode + " picked " + ringtone.getTitle(TimerSettingsActivity.this));
+                databaseAccess.open();
+                databaseAccess.updateTone(timerModel.getId(), uri.toString());
+                databaseAccess.close();
+                binding.chengeToneText.setText("Change Alarm Tone (" + ringtone.getTitle(TimerSettingsActivity.this) + ")");
+                Toast.makeText(this, "Sound Updated Successfully", Toast.LENGTH_SHORT).show();
+                player.stop();
+            } catch (Exception e) {
+                e.printStackTrace();
+                binding.chengeToneText.setText("Change Alarm Tone");
+                Toast.makeText(this, "This audio file is not supported!", Toast.LENGTH_SHORT).show();
+            }
+
         }
     }
 

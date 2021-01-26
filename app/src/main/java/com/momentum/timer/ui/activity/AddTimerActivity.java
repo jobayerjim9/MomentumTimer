@@ -181,14 +181,6 @@ public class AddTimerActivity extends AppCompatActivity {
             binding.numberOfDominoInput.setErrorEnabled(true);
             binding.numberOfDominoInput.setError("Enter number of domino segments to proceed");
         }
-        else if (numberOfRepeats.isEmpty()) {
-            binding.timerTitleInput.setErrorEnabled(false);
-            binding.dominoSegmentTitleInput.setErrorEnabled(false);
-            binding.restSegmentTitleInput.setErrorEnabled(false);
-            binding.numberOfDominoInput.setErrorEnabled(false);
-            binding.numberOfRepeatInput.setErrorEnabled(true);
-            binding.numberOfRepeatInput.setError("Enter number of repeat to proceed");
-        }
         else {
             binding.timerTitleInput.setErrorEnabled(false);
             binding.dominoSegmentTitleInput.setErrorEnabled(false);
@@ -203,6 +195,9 @@ public class AddTimerActivity extends AppCompatActivity {
             }
             if (secondsText.isEmpty()) {
                 secondsText = "0";
+            }
+            if (numberOfRepeats.isEmpty()) {
+                numberOfRepeats="0";
             }
             TimerModel timerModel = new TimerModel(timerTitle, dominoTitle, restTitle, Integer.parseInt(hoursText), Integer.parseInt(minutesText), Integer.parseInt(secondsText), spacingPercentage, Integer.parseInt(numberOfSegment), Integer.parseInt(numberOfRepeats));
             saveRuleToDatabase(timerModel);

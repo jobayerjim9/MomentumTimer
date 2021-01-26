@@ -9,7 +9,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Binder;
 import android.os.Build;
+import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -23,9 +25,14 @@ import static androidx.core.app.NotificationCompat.PRIORITY_MIN;
 
 
 public class SoundService extends Service {
-
+//    private final IBinder binder = new LocalBinder();
     MediaPlayer player;
-
+//    public class LocalBinder extends Binder {
+//        public SoundService getService() {
+//            // Return this instance of LocalService so clients can call public methods
+//            return SoundService.this;
+//        }
+//    }
     @RequiresApi(Build.VERSION_CODES.O)
     private String createNotificationChannel(String channelId, String channelName) {
         NotificationChannel chan = new NotificationChannel(channelId,
@@ -70,21 +77,79 @@ public class SoundService extends Service {
 
     }
 
+
+//    public void playAudio(String uriS) {
+//        if (uriS==null) {
+//            player = MediaPlayer.create(this, R.raw.audio);
+//        }
+//        else {
+//            Uri uri = Uri.parse(uriS);
+//            player = MediaPlayer.create(this, uri);
+//        }
+//        player.start();
+//    }
+//    public void stopAudio() {
+//        if (player!=null)
+//            player.stop();
+//    }
+//    public Boolean isPlaying() {
+//        if (player!=null) {
+//            return player.isPlaying();
+//        }
+//        return false;
+//    }
+    private boolean audio=false;
     public int onStartCommand(Intent intent, int flags, int startId) {
         String tone = intent.getExtras().getString("uri");
-        Log.d("selectedToneService", tone);
+        long timer = intent.getExtras().getLong("timer");
         if (tone.trim().isEmpty()) {
             player = MediaPlayer.create(this, R.raw.audio); //select music file
         } else {
             Uri uri = Uri.parse(tone);
             player = MediaPlayer.create(this, uri);
         }
-        player.setLooping(false);
-        player.start();
+        new CountDownTimer(timer*1000,1000) {
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+                long sec=millisUntilFinished/1000;
+                Log.d("startService","time " +sec);
+                if (sec<=3 && !audio) {
+                    try {
+                        player.start();
+                        audio = true;
+                    } catch (IllegalStateException e) {
+                        e.printStackTrace();
+                        stopSelf();
+                        cancel();
+                    }
+                }
+            }
+
+            @Override
+            public void onFinish() {
+                Log.d("startService","finish");
+
+                    try {
+                        if (player.isPlaying()) {
+                            player.stop();
+
+                            audio = false;
+                        }
+                    }catch (IllegalStateException e) {
+                        e.printStackTrace();
+                        stopSelf();
+                        cancel();
+                    }
+            }
+        }.start();
+
         return Service.START_NOT_STICKY;
     }
 
+    @Override
     public void onDestroy() {
+        super.onDestroy();
         player.stop();
         player.release();
         stopSelf();
