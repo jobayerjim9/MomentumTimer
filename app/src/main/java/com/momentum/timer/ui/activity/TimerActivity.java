@@ -366,10 +366,12 @@ public class TimerActivity extends AppCompatActivity {
 
     private void playWarning(long remain) {
         stopWarning();
-        soundIntent = new Intent(TimerActivity.this, SoundService.class);
-        soundIntent.putExtra("uri", timerModel.getSelectedAudio());
-        soundIntent.putExtra("timer", remain);
-        startService(soundIntent);
+        if (timerModel.getAudioSetting() == 2 || timerModel.getAudioSetting() == 3) {
+            soundIntent = new Intent(TimerActivity.this, SoundService.class);
+            soundIntent.putExtra("uri", timerModel.getSelectedAudio());
+            soundIntent.putExtra("timer", remain);
+            startService(soundIntent);
+        }
     }
 
     private void stopWarning() {
